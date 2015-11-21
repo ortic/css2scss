@@ -1,0 +1,143 @@
+#!/usr/bin/env php
+<?php
+
+require '../vendor/autoload.php';
+
+/**
+ * Class Css2Scss
+ */
+class Css2Scss
+{
+    /**
+     * @var array holds the command line arguments
+     */
+    private $argv = array();
+
+    /**
+     * @var string the path to the CSS file to be converted
+     */
+    private $cssFileName = '';
+
+    /**
+     * @var string the path to the SCSS file where the converted CSS output should be saved
+     */
+    private $scssFileName = '';
+
+    /**
+     * @param $argv command line arguments
+     */
+    public function __construct($argv)
+    {
+        $this->argv = $argv;
+
+        // remove first item from array, it only contains a path to the script
+        array_shift($this->argv);
+
+        $this->parseArguments();
+        $this->checkMandatoryArguments();
+        $this->run();
+    }
+
+    /**
+     * Loops through the options specified in the getOptions methods and assigns them to the proper class properties
+     */
+    protected function parseArguments()
+    {
+        $options = $this->getOptions();
+        $currentVariable = null;
+
+        foreach ($this->argv as $argument) {
+            if (array_key_exists($argument, $options)) {
+                $currentVariable = $options[$argument]['assignmentTarget'];
+            } else {
+                if (is_null($currentVariable)) {
+                    echo "Invalid command line arguments specified!\n\n";
+                    $this->showHelp();
+                    die();
+                }
+                $this->$currentVariable = $argument;
+                $currentVariable = null;
+            }
+        }
+    }
+
+    /**
+     * Checks if all mandatory arguments are specified
+     */
+    protected function checkMandatoryArguments()
+    {
+        $options = $this->getOptions();
+        foreach ($options as $optionKey => $option) {
+            if ($option['mandatory']) {
+                $assignmentTarget = $option['assignmentTarget'];
+                if (empty($this->$assignmentTarget)) {
+                    echo sprintf("Please specify mandatory argument: %s\n\n", $optionKey);
+                    $this->showHelp();
+                    die();
+                }
+            }
+        }
+    }
+
+    /**
+     * Show a usage example and all available options
+     */
+    protected function showHelp()
+    {
+        echo "Usage:\t\n  css2scss --css input.css --scss output.scss\n\n";
+        echo "Arguments:\n";
+        $options = $this->getOptions();
+        foreach ($options as $optionKey => $option) {
+            echo "  " . str_pad($optionKey, 10) . $option['explanation'] . "\n";
+        }
+    }
+
+    /**
+     * Returns an array of an array having three properties:
+     * - explanation: An explanation for the user about the argument
+     * - mandatory: true if mandatory
+     * - assignmentTarget: The name of the class property where to keep the argument value
+     *
+     * @return array options
+     */
+    protected function getOptions()
+    {
+        return array(
+            '--css' => array(
+                'explanation' => 'The css file you want to convert to a scss file',
+                'mandatory' => true,
+                'assignmentTarget' => 'cssFileName',
+            ),
+            '--scss' => array(
+                'explanation' => '(optional) Path where you want to save the converted file',
+                'mandatory' => false,
+                'assignmentTarget' => 'scssFileName',
+            ),
+        );
+    }
+
+    /**
+     * Starts the conversion
+     */
+    public function run()
+    {
+        if (!file_exists($this->cssFileName)) {
+            echo sprintf("CSS File \"%s\" not found!\n", $this->cssFileName);
+            die();
+        }
+
+        $cssFileContent = file_get_contents($this->cssFileName);
+        $css2scssParser = new \Ortic\Css2Scss\Css2Scss($cssFileContent);
+        $scssOutput = $css2scssParser->getScss();
+
+        if ($this->scssFileName == '') {
+            echo $scssOutput;
+        } else {
+            file_put_contents($this->scssFileName, $scssOutput);
+            echo sprintf("LESS output saved in \"%s\"\n", $this->scssFileName);
+        }
+    }
+}
+
+(new Css2Scss($argv))->run();
+

@@ -1,0 +1,31 @@
+{
+    "name": "ortic/css2scss",
+    "description": "css to scss converter",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Remo Laubacher",
+            "email": "remo.laubacher@ortic.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.4",
+        "natxet/cssmin": "~3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "satooshi/php-coveralls": "dev-master",
+        "nette/nette": "~2.1.3",
+        "apigen/apigen": "2.8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ortic\\Css2Scss\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/css2scss.bat",
+        "bin/css2scss"
+    ]
+}
