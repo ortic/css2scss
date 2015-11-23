@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b0967c94dbc63bdc03dded74583dd50e",
+    "hash": "d6644c72e87ed5283508c34625e8225d",
     "packages": [
         {
             "name": "natxet/CssMin",
@@ -1778,6 +1778,8 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.4.4"
+    },
     "platform-dev": []
 }

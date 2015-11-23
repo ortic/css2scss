@@ -14,24 +14,25 @@ class Css2ScssTest extends PHPUnit_Framework_TestCase
     public function providerSnippets()
     {
         return array(
-            array('html p { font-size: 12px; }', "html {\n\tp {\n\t\tfont-size: 12px;\n\t}\n}\n"),
-            array('html > p { font-size: 12px; }', "html {\n\t>p {\n\t\tfont-size: 12px;\n\t}\n}\n"),
-            array('html> p { font-size: 12px; }', "html {\n\t>p {\n\t\tfont-size: 12px;\n\t}\n}\n"),
-            array('html>p { font-size: 12px; }', "html {\n\t>p {\n\t\tfont-size: 12px;\n\t}\n}\n"),
-            array('html, body { margin: 0; }', "html {\n\tmargin: 0;\n}\nbody {\n\tmargin: 0;\n}\n"),
-            array('a:hover { text-decoration: none; }', "a {\n\t&:hover {\n\t\ttext-decoration: none;\n\t}\n}\n"),
-            array('button::-moz-focus-inner { border: 0; }', "button {\n\t&::-moz-focus-inner {\n\t\tborder: 0;\n\t}\n}\n"),
-            array('a[href^="javascript:"]:after { border: 0; }', "a[href^=\"javascript:\"] {\n\t&:after {\n\t\tborder: 0;\n\t}\n}\n"),
+            array('html p { font-size: 12px; }', "html {\n\tp {\n\t\tfont-size: 12px;\n\t}\n}\n", false),
+            array('html > p { font-size: 12px; }', "html {\n\t>p {\n\t\tfont-size: 12px;\n\t}\n}\n", false),
+            array('html> p { font-size: 12px; }', "html {\n\t>p {\n\t\tfont-size: 12px;\n\t}\n}\n", false),
+            array('html>p { font-size: 12px; }', "html {\n\t>p {\n\t\tfont-size: 12px;\n\t}\n}\n", false),
+            array('html, body { margin: 0; }', "html {\n\tmargin: 0;\n}\nbody {\n\tmargin: 0;\n}\n", false),
+            array('a:hover { text-decoration: none; }', "a {\n\t&:hover {\n\t\ttext-decoration: none;\n\t}\n}\n", false),
+            array('button::-moz-focus-inner { border: 0; }', "button {\n\t&::-moz-focus-inner {\n\t\tborder: 0;\n\t}\n}\n", false),
+            array('a[href^="javascript:"]:after { border: 0; }', "a[href^=\"javascript:\"] {\n\t&:after {\n\t\tborder: 0;\n\t}\n}\n", false),
+            array('a { color: white; }', "\$color_1: white;\n\na {\n\tcolor: \$color_1;\n}\n", true),
         );
     }
 
     /**
      * @dataProvider providerSnippets
      */
-    public function testSnippets($css, $scss)
+    public function testSnippets($css, $scss, $extractVariables)
     {
-        $css2scssParser = new \Ortic\Css2Scss\Css2Scss($css);
-        $scssOutput = $css2scssParser->getScss();
+        $css2scssParser = new Ortic\Css2Scss\Css2Scss($css);
+        $scssOutput = $css2scssParser->getScss($extractVariables);
 
         $scssOutput = $this->normalizeLineEndings($scssOutput);
         $scssContent = $this->normalizeLineEndings($scss);
