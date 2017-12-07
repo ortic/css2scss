@@ -31,6 +31,8 @@ class ScssRuleList
             $selectors = $ruleSet->getSelectors();
 
             foreach ($ruleSet->getTokens() as $token) {
+                if(is_object($token) && get_class($token) === 'CssCommentToken') continue;
+
                 $this->parseTreeNode($output, $selectors, $token);
             }
         }
