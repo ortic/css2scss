@@ -136,7 +136,7 @@ class ScssRuleList
         if ($token instanceof \CssRulesetDeclarationToken) {
             return $indentation . $token->Property . ": " . $token->Value . ($token->IsImportant ? " !important" : "") . ($token->IsLast ? "" : ";");
         } elseif ($token instanceof \CssAtKeyframesStartToken) {
-            return $indentation . "@" . $token->AtRuleName . " \"" . $token->Name . "\" {";
+            return $indentation . "@" . $token->AtRuleName . " " . $token->Name . " {";
         } elseif ($token instanceof \CssAtKeyframesRulesetStartToken) {
             return $indentation . "\t" . implode(",", $token->Selectors) . " {";
         } elseif ($token instanceof \CssAtKeyframesRulesetEndToken) {
