@@ -68,7 +68,7 @@ class ScssRuleList
         $lastCharacterColon = false;
         $selectorOut = '';
         for ($i = 0; $i < strlen($selector); $i++) {
-            $c = $selector{$i};
+            $c = $selector[$i];
 
             // Don't parse anything between (..) and [..]
             $nestedPseudo = ($c === '(' || $c === '[') || $nestedPseudo;
